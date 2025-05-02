@@ -3,46 +3,42 @@ import streamlit as st
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-# --- キャッシュして読み込み ---
+# --- モデルとトークナイザの読み込み ---
 @st.cache_resource
 def load_model_and_tokenizer():
-    model = AutoModelForSequenceClassification.from_pretrained("./saved_model")
-    tokenizer = AutoTokenizer.from_pretrained("./saved_model")
+    model = AutoModelForSequenceClassification.from_pretrained(
+        "kodaifukuda0311/BERT-bskypopularity-predictor", trust_remote_code=True
+    )
+    tokenizer = AutoTokenizer.from_pretrained(
+        "kodaifukuda0311/BERT-bskypopularity-predictor", trust_remote_code=True
+    )
     model.eval()
     return model, tokenizer
 
 model, tokenizer = load_model_and_tokenizer()
 
-# --- 推論関数 ---
-def predict_popularity(headline, threshold=0.35):
-    # トークナイズ
-    inputs = tokenizer(headline, return_tensors="pt", padding="max_length", truncation=True, max_length=40)
-
-    # 推論
+# --- 予測関数 ---
+def predict(headline, threshold=0.35):
+    inputs = tokenizer(headline, return_tensors="pt", padding="max_length", truncation=True, max_length=32)
     with torch.no_grad():
-        outputs = model(**inputs)
-        logits = outputs.logits
-        probs = torch.softmax(logits, dim=1)
-        score = probs[0][1].item()  # ラベル1（ヒット）の確率
-
-    # 判定
-    if score >= threshold:
-        return f"🎯 ヒットの可能性が高いです！（確率: {score:.2%}）"
-    else:
-        return f"📉 ヒットの可能性は低めです…（確率: {score:.2%}）"
+        logits = model(**inputs).logits
+        probs = torch.softmax(logits, dim=1)[0][1].item()  # ラベル1（ヒット）の確率
+    return probs
 
 # --- Streamlit UI ---
-st.title("📰 Blueskyバズ予測ツール")
+st.title("📰 Blueskyバズ予測アプリ")
 
-st.markdown("#### 📝 アプリの概要")
-st.write("""
-これはあなたのBluesky投稿が「バズるかどうか」を予測するアプリです。  
-LINEヤフーが公開しているDistilBERTモデルを用いて、ヒット予測モデルにより判定を行います。  
-（モデルは20250430)
+st.markdown("""
+見出しを打ち込むだけで、Blueskyの投稿が**バズるかどうか**を70%の精度で予測します！  
+LINEヤフーが公開している言語モデル「LINE DistilBERT」を使い、ファインチューニングしたものです。
+（20250430更新）
 """)
 
-headline = st.text_input("記事の見出しを入力してください（最大32文字）")
+headline = st.text_input("見出しを入力してください（最大32文字）")
 
 if st.button("予測する"):
-    result = predict_popularity(headline)
-    st.success(result)
+    score = predict(headline, threshold=0.35)
+    if score >= 0.35:
+        st.success(f"🎯 いいね！ヒットする可能性が高いです！")
+    else:
+        st.warning(f"📉 ごめんね、ヒットする可能性は低いです…")
