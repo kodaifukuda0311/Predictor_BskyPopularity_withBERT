@@ -5,12 +5,14 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 # --- モデルとトークナイザの読み込み ---
 @st.cache_resource
+@st.cache_resource
 def load_model_and_tokenizer():
     model = AutoModelForSequenceClassification.from_pretrained(
-        "kodaifukuda0311/BERT-bskypopularity-predictor")
+        "kodaifukuda0311/BERT-bskypopularity-predictor"
+    )
     tokenizer = AutoTokenizer.from_pretrained(
-        "kodaifukuda0311/BERT-bskypopularity-predictor")
-    model.eval()
+        "kodaifukuda0311/BERT-bskypopularity-predictor"
+    )
     return model, tokenizer
 
 model, tokenizer = load_model_and_tokenizer()
