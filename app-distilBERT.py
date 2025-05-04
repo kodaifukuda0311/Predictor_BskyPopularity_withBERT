@@ -54,7 +54,7 @@ headline = st.text_input("見出しを入力してください（最大32文字�
 
 if st.button("予測する"):
     score = predict(headline, threshold=0.35)
-    if score >= 0.35:
+    if score >= 0.4:
         st.success(f"🎯 いいね！ヒットする可能性が高いです！")
     else:
         st.warning(f"📉 ごめんね、ヒットする可能性は低いです…")
