@@ -19,12 +19,15 @@ model, tokenizer = load_model_and_tokenizer()
 
 # --- 予測関数 ---
 def predict(headline, threshold=0.35):
-    inputs = tokenizer(headline, return_tensors="pt", padding="max_length", truncation=True, max_length=40)
-    inputs = dict(inputs)
+    inputs = tokenizer(headline, return_tensors="pt", padding="max_length", truncation=True, max_length=32)
+    inputs = {k: v.to(model.device) for k, v in inputs.items()}
+
+    model.eval()
     with torch.no_grad():
-        logits = model(**inputs).logits
-        probs = torch.softmax(logits, dim=1)[0][1].item()  # ラベル1（ヒット）の確率
+        outputs = model(**inputs)
+        probs = torch.softmax(outputs.logits, dim=1)[0][1].item()
     return probs
+
 
 # --- Streamlit UI ---
 st.title("📰 Blueskyバズ予測アプリ")
