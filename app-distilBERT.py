@@ -7,11 +7,9 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 @st.cache_resource
 def load_model_and_tokenizer():
     model = AutoModelForSequenceClassification.from_pretrained(
-        "kodaifukuda0311/BERT-bskypopularity-predictor", trust_remote_code=True
-    )
+        "kodaifukuda0311/BERT-bskypopularity-predictor")
     tokenizer = AutoTokenizer.from_pretrained(
-        "kodaifukuda0311/BERT-bskypopularity-predictor", trust_remote_code=True
-    )
+        "kodaifukuda0311/BERT-bskypopularity-predictor")
     model.eval()
     return model, tokenizer
 
