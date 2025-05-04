@@ -19,7 +19,8 @@ model, tokenizer = load_model_and_tokenizer()
 
 # --- 予測関数 ---
 def predict(headline, threshold=0.35):
-    inputs = tokenizer(headline, return_tensors="pt", padding="max_length", truncation=True, max_length=32)
+    inputs = tokenizer(headline, return_tensors="pt", padding="max_length", truncation=True, max_length=40)
+    inputs = dict(inputs)
     with torch.no_grad():
         logits = model(**inputs).logits
         probs = torch.softmax(logits, dim=1)[0][1].item()  # ラベル1（ヒット）の確率
