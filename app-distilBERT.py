@@ -26,7 +26,7 @@ def predict(headline, threshold=0.35):
         return_tensors="pt",
         truncation=True,
         padding="max_length",
-        max_length=32
+        max_length=40
     )
 
     # 入力を model と同じデバイスへ移動
@@ -47,7 +47,7 @@ st.title("📰 Blueskyバズ予測アプリ")
 st.markdown("""
 見出しを打ち込むだけで、Blueskyの投稿が**バズるかどうか**を70%の精度で予測します！  
 LINEヤフーが公開している言語モデル「LINE DistilBERT」を使い、ファインチューニングしたものです。
-（20250430更新）
+（20250521更新）
 """)
 
 headline = st.text_input("見出しを入力してください（最大32文字）")
