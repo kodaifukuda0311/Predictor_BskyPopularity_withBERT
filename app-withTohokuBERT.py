@@ -18,7 +18,7 @@ def load_model_and_tokenizer():
 model, tokenizer = load_model_and_tokenizer()
 
 # --- 予測関数 ---
-def predict(headline, threshold=0.4):
+def predict(headline, threshold=0.38):
     # 推論モード＆入力トークナイズ
     model.eval()
     encoded = tokenizer(
@@ -53,8 +53,8 @@ st.markdown("""
 headline = st.text_input("見出しを入力してください（最大32文字）")
 
 if st.button("予測する"):
-    score = predict(headline, threshold=0.4)
-    if score >= 0.4:
+    score = predict(headline, threshold=0.38)
+    if score >= 0.38:
         st.success(f"🎯 いいね！ヒットする可能性が高いです！")
     else:
         st.warning(f"📉 ごめんね、ヒットする可能性は低いです…")
