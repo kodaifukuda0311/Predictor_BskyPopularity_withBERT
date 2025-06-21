@@ -18,7 +18,7 @@ def load_model_and_tokenizer():
 model, tokenizer = load_model_and_tokenizer()
 
 # --- 予測関数 ---
-def predict(headline, threshold=0.35):
+def predict(headline, threshold=0.4):
     # 推論モード＆入力トークナイズ
     model.eval()
     encoded = tokenizer(
@@ -45,15 +45,15 @@ def predict(headline, threshold=0.35):
 st.title("📰 Blueskyバズ予測アプリ")
 
 st.markdown("""
-見出しを打ち込むだけで、Blueskyの投稿が**バズるかどうか**を70%の精度で予測します！  
-LINEヤフーが公開している言語モデル「LINE DistilBERT」を使い、ファインチューニングしたものです。
-（20250521更新）
+見出しを打ち込むだけで、Blueskyの投稿が**バズるかどうか**を90%の精度で予測します！  
+東北大学が公開しているBERTを使い、ファインチューニングしたものです。
+（20250618更新）
 """)
 
 headline = st.text_input("見出しを入力してください（最大32文字）")
 
 if st.button("予測する"):
-    score = predict(headline, threshold=0.35)
+    score = predict(headline, threshold=0.4)
     if score >= 0.4:
         st.success(f"🎯 いいね！ヒットする可能性が高いです！")
     else:
