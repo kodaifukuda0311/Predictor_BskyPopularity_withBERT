@@ -54,7 +54,7 @@ headline = st.text_input("見出しを入力してください（最大32文字�
 
 if st.button("予測する"):
     if len(headline.strip()) < 10:
-        return None
+        st.stop()
     else:
         score = predict(headline, threshold=0.38)
         st.markdown(f"#### 予測スコア：`{score:.3f}`")
