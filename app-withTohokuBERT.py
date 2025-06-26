@@ -53,10 +53,13 @@ st.markdown("""
 headline = st.text_input("見出しを入力してください（最大32文字）")
 
 if st.button("予測する"):
-    score = predict(headline, threshold=0.38)
-    st.markdown(f"#### 予測スコア：`{score:.3f}`")
-    
-    if score >= 0.38:
-        st.success(f"🎯 いいね！ヒットする可能性が高いです！")
+    if len(headline.strip()) < 10:
+        return None
     else:
-        st.warning(f"📉 ごめんね、ヒットする可能性は低いです…")
+        score = predict(headline, threshold=0.38)
+        st.markdown(f"#### 予測スコア：`{score:.3f}`")
+        
+        if score >= 0.38:
+            st.success(f"🎯 いいね！ヒットする可能性が高いです！")
+        else:
+            st.warning(f"📉 ごめんね、ヒットする可能性は低いです…")
